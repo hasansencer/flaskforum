@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Admin - Moderators</h1>
+    <div class="row">
+        <div class="col-md-12">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Add Moderator</h2>
+            <form method="POST" action="{{ url_for('main.admin_moderators') }}">
+                {{ add_mod_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ add_mod_form.username.label(class="form-control-label") }}
+                    {{ add_mod_form.username(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ add_mod_form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Moderators</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for moderator in moderators.items %}
+                        <tr>
+                            <td>{{ moderator.username }}</td>
+                            <td>{{ moderator.email }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('main.remove_moderator_user') }}">
+                                    {{ delete_mod_form.hidden_tag() }}
+                                    <input type="hidden" name="username" value="{{ moderator.username }}">
+                                    <button type="submit" class="btn btn-danger">Remove Moderator</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination-container">
+                {{ moderators.links }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

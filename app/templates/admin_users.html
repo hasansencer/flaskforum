@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Admin - Users</h1>
+    <div class="row">
+        <div class="col-md-12">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Ban User</h2>
+            <form method="POST" action="{{ url_for('main.ban_user') }}">
+                {{ ban_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ ban_form.username.label(class="form-control-label") }}
+                    {{ ban_form.username(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ ban_form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Users</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users.items %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <a href="{{ url_for('main.edit_user', user_id=user.id) }}" class="btn btn-info">Edit</a>
+                                <form method="POST" action="{{ url_for('main.ban_user') }}" style="display:inline;">
+                                    {{ ban_form.hidden_tag() }}
+                                    <input type="hidden" name="username" value="{{ user.username }}">
+                                    <button type="submit" class="btn btn-danger">Ban User</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination-container">
+                {{ users.links }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

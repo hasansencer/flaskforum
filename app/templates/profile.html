@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="profile">
+        <img src="{{ url_for('static', filename='profile_pics/' ~ user.image_file) }}" alt="Profile Picture" class="img-profile-large">
+        <h2>{{ user.username }}</h2>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Age:</strong> {{ user.age }}</p>
+        <p><strong>My Past:</strong> {{ user.my_past }}</p>
+    </div>
+    <div class="posts-container">
+        <h2>Posts</h2>
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="Profile Picture" class="img-profile-small">
+                    <div>
+                        <strong>{{ post.author.username }}</strong>
+                        <span>{{ post.date_posted.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                </div>
+                <h2>{{ post.title }}</h2>
+                <div class="post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
